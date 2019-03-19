@@ -1,21 +1,21 @@
 @import "~bulma/bulma";
 @import url(https://fonts.googleapis.com/css?family=Roboto:400,700);
 
-$font_roboto_google: 'Roboto', sans-serif;
-.label
-{
+$font_roboto_google: "Roboto", sans-serif;
+$prim_color: #282c34;
+$sub_color: #f4f442;
+
+.label {
   color: #fff;
 }
 
-.generate_btn
-{
+.generate_btn {
   margin: 20px;
-  background-color: yellow;
-  border-color: #282c34;
+  background-color: $sub_color;
+  border-color: $prim_color;
 }
 
-.plotoutput_container
-{
+.plotoutput_container {
   background-color: rgba(255, 255, 255, 0.3);
   border-radius: 5px;
   padding: 15px;
@@ -23,74 +23,58 @@ $font_roboto_google: 'Roboto', sans-serif;
   font-size: 1.2rem;
 }
 
-.control
-{
-  .control
-  {
+.control {
+  .control {
     margin-top: 15px;
   }
 }
 
-.search_btn
-{
+.search_btn {
   padding: 0.375em;
   border-radius: 0;
 }
 
-.used_resources a
-{
-  color: yellow;
+.used_resources a {
+  color: $sub_color;
 }
 
-.used_resources a:hover
-{
-  text-shadow: 0 0 80px rgba(255,255,255,.5);
+.used_resources a:hover {
+  text-shadow: 0 0 80px rgba(255, 255, 255, 0.5);
 }
 
-.select_resources
-{
+.select_resources {
   width: 100%;
-  select
-  {
+  select {
     width: 100%;
   }
 }
 
-.columns
-{
+.columns {
   margin-left: 0;
   margin-right: 0;
 
-  .input
-  {
+  .input {
     border-radius: 0;
     border-right-width: 0;
   }
 }
 
-html, body
-{
- font-family: $font_roboto_google;
+html,
+body {
+  font-family: $font_roboto_google;
 }
 
 .App {
   text-align: center;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 40vmin;
-  pointer-events: none;
-}
-
-.title
-{
-  color: #282c34;
-  text-shadow: -1px 0 yellow, 0 1px yellow, 1px 0 yellow, 0 -1px yellow;
+.title {
+  color: $prim_color;
+  text-shadow: -1px 0 $sub_color, 0 1px $sub_color, 1px 0 $sub_color, 0 -1px $sub_color;
 }
 
 .App {
-  background-color: #282c34;
+  background-color: $prim_color;
   min-height: 100vh;
   display: flex;
   padding-top: 5%;
@@ -99,17 +83,4 @@ html, body
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
 }

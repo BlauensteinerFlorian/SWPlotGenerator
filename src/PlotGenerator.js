@@ -13,25 +13,25 @@ export default class PlotGenerator extends React.Component {
             char1search: '',
             char2search: '',
             planetsearch: '',
-            Char1SearchResult: [],
-            Char2SearchResult: [],
-            PlanetSearchResult: [],
-            RandomFilmResult: [],
+            char1SearchResult: [],
+            char2SearchResult: [],
+            planetSearchResult: [],
+            randomFilmResult: [],
             char1Url: '',
             char2Url: '',
             planetUrl: '',
-            UpdateKey: 0,
-            UpdateFilm: 0,
-            UpdateSelectChar1: 0,
-            UpdateSelectChar2: 0,
-            UpdateSelectPlanet: 0,
+            updateKey: 0,
+            updateFilm: 0,
+            updateSelectChar1: 0,
+            updateSelectChar2: 0,
+            updateSelectPlanet: 0,
             showNotification: 0,
             showNotificationWarning: 0,
         };
         this.handleCharValueChange = this.handleCharValueChange.bind(this);
     }
 
-    SetCharSearch(e, searchstate) {
+    setCharSearch(e, searchstate) {
         this.setState({
             [searchstate]: e.target.value
         });
@@ -47,12 +47,12 @@ export default class PlotGenerator extends React.Component {
             .then(response => {
                 console.log(response.data);
                 this.setState({ [searchresultstate]: response.data,
-                                 UpdateKey: 0,
+                                 updateKey: 0,
                                  showNotificationWarning: response.data.count === 0 ? 1 : 0,
                                 });
-                searchresultstate === "Char1SearchResult" ? this.setState({UpdateSelectChar1: Math.random()}) : console.log();
-                searchresultstate === "Char2SearchResult" ? this.setState({UpdateSelectChar2: Math.random()}) : console.log();
-                searchresultstate === "PlanetSearchResult" ? this.setState({UpdateSelectPlanet: Math.random()}) : console.log();
+                searchresultstate === "char1SearchResult" ? this.setState({updateSelectChar1: Math.random()}) : console.log();
+                searchresultstate === "char2SearchResult" ? this.setState({updateSelectChar2: Math.random()}) : console.log();
+                searchresultstate === "planetSearchResult" ? this.setState({updateSelectPlanet: Math.random()}) : console.log();
             })
             .catch(error => {
                 console.log(error);
@@ -62,42 +62,27 @@ export default class PlotGenerator extends React.Component {
             this.setState({showNotification: 1});
         }
     }
-
-    /*    ShowSelect(type) {
-            let searchResult;
-            if (type === "char1Url") {
-                searchResult = this.state.Char1SearchResult;
-            }
-            else if (type === "char2Url") {
-                searchResult = this.state.Char2SearchResult;
-            }
-            else {
-                searchResult = this.state.PlanetSearchResult;
-            }
-            return <SelectPlotResources searches={searchResult} onSelectChange={this.handleCharValueChange} type={type} />
-        }
-    */
-        ShowChar1Select()
+        showChar1Select()
         {
-            return <SelectPlotResources searches={this.state.Char1SearchResult}
+            return <SelectPlotResources searches={this.state.char1SearchResult}
             onSelectChange={this.handleCharValueChange} type="char1Url" 
-            key={this.state.UpdateSelectChar1} />
+            key={this.state.updateSelectChar1} />
         }
-        ShowChar2Select()
+        showChar2Select()
         {
-            return <SelectPlotResources searches={this.state.Char2SearchResult}
+            return <SelectPlotResources searches={this.state.char2SearchResult}
             onSelectChange={this.handleCharValueChange} type="char2Url" 
-            key={this.state.UpdateSelectChar2} />
+            key={this.state.updateSelectChar2} />
         }
-        ShowPlanetSelect()
+        showPlanetSelect()
         {
-            return <SelectPlotResources searches={this.state.PlanetSearchResult}
+            return <SelectPlotResources searches={this.state.planetSearchResult}
             onSelectChange={this.handleCharValueChange} type="planetUrl" 
-            key={this.state.UpdateSelectPlanet} />
+            key={this.state.updateSelectPlanet} />
         }
 
 
-    WaitForValues() {
+    waitForValues() {
         return <WaitingForValueSelect/>
     }
 
@@ -107,64 +92,56 @@ export default class PlotGenerator extends React.Component {
         });
     }
 
-    GetRandomAttributes() {
-        if (this.state.UpdateFilm === 0) {
+    getRandomAttributes() {
+        if (this.state.updateFilm === 0) {
             const randomfilm = 1 + Math.floor(Math.random() * 7);
             axios.get('https://swapi.co/api/films/' + randomfilm,
                 {
                 }).then(response => {
                     this.setState({
-                        RandomFilmResult: response.data,
-                        UpdateFilm: 1
+                        randomFilmResult: response.data,
+                        updateFilm: 1
                     });
                 }).catch(error => {
                     console.log(error);
                 });
         }
     }
-    GetUsedObjects() {
+    grabUsedObjects() {
         let char1obj;
         let char2obj;
         let planetobj;
-        this.state.Char1SearchResult.results.map((resource) => {
+        this.state.char1SearchResult.results.map((resource) => {
             resource.url === this.state.char1Url ? char1obj = resource : console.log()
         })
 
-        this.state.Char2SearchResult.results.map((resource) => {
+        this.state.char2SearchResult.results.map((resource) => {
             resource.url === this.state.char2Url ? char2obj = resource : console.log()
         })
 
-        this.state.PlanetSearchResult.results.map((resource) => {
+        this.state.planetSearchResult.results.map((resource) => {
             resource.url === this.state.planetUrl ? planetobj = resource : console.log()
         })
 
-        const allObjects = [char1obj, char2obj, planetobj, this.state.RandomFilmResult];
+        const allObjects = [char1obj, char2obj, planetobj, this.state.randomFilmResult];
 
         return allObjects;
     }
 
-    NoSearchInputNotification()
-    {
-        return <div id="notification" className="notification is-danger">
-        <button className="delete"></button>
-        please fill the input field with <strong>atleast one letter</strong> before searching for characters
-      </div>
-    }
-
-    GeneratePlot() {
+    generatePlot() {
         if (this.state.char1Url !== '' && this.state.char2Url !== '' && this.state.planetUrl !== '') {
-            this.GetRandomAttributes();
-            const allObjects = this.GetUsedObjects();
+            this.getRandomAttributes();
+            const allObjects = this.grabUsedObjects();
             return <PlotOutput allObjects={allObjects}/>
         }
     }
 
-    GenBtnClicked() {
-        if(this.state.Char1SearchResult.count > 0 && this.state.Char2SearchResult.count > 0 && this.state.PlanetSearchResult.count > 0)
+    genBtnClicked() {
+        if(this.state.char1SearchResult.count > 0 && this.state.char2SearchResult.count > 0 && this.state.planetSearchResult.count > 0)
         {
             this.setState({
-                UpdateFilm: 0,
-                UpdateKey: Math.random()
+                updateFilm: 0,
+                updateKey: Math.random()
             })
         }
     }
@@ -185,54 +162,56 @@ export default class PlotGenerator extends React.Component {
                         <div className="field column is-one-third">
                             <label className="label">Character 1</label>
                             <div className="control columns">
-                                <input className="input column" type="text" value={this.state.char1search} placeholder="search character" onChange={(e) => this.SetCharSearch(e, "char1search")}></input>
+                                <input className="input column" type="text" value={this.state.char1search} placeholder="search character" onChange={(e) => this.setCharSearch(e, "char1search")}></input>
                                 <button className="button column is-one-fifth search_btn" type="button"
-                                    onClick={() => this.searchChar("Char1SearchResult", this.state.char1search)}>
+                                    onClick={() => this.searchChar("char1SearchResult", this.state.char1search)}>
                                     <span className="icon is-small">
                                         <FontAwesomeIcon icon={faSearch} />
                                     </span>
                                 </button>
                             </div>
-                            {    this.state.Char1SearchResult.count > 0 ? this.ShowChar1Select("char1Url") : this.WaitForValues()
+                            {    this.state.char1SearchResult.count > 0 ? this.showChar1Select("char1Url") : this.waitForValues()
                             }
                         </div>
 
                         <div className="field column is-one-third">
                             <label className="label">Character 2</label>
                             <div className="control columns">
-                                <input className="input column" type="text" value={this.state.char2search} placeholder="search character" onChange={(e) => this.SetCharSearch(e, "char2search")}></input>
-                                <button className="button column is-one-fifth search_btn" type="button" onClick={() => this.searchChar("Char2SearchResult", this.state.char2search)}>
+                                <input className="input column" type="text" value={this.state.char2search} placeholder="search character" onChange={(e) => this.setCharSearch(e, "char2search")}></input>
+                                <button className="button column is-one-fifth search_btn" type="button" 
+                                onClick={() => this.searchChar("char2SearchResult", this.state.char2search)}>
                                     <span className="icon is-small">
                                         <FontAwesomeIcon icon={faSearch} />
                                     </span>
                                 </button>
                             </div>
                             {
-                                this.state.Char2SearchResult.count > 0 ? this.ShowChar2Select("char2Url") : this.WaitForValues()
+                                this.state.char2SearchResult.count > 0 ? this.showChar2Select("char2Url") : this.waitForValues()
                             }
                         </div>
 
                         <div className="field column is-one-third">
                             <label className="label">Planet</label>
                             <div className="control columns">
-                                <input className="input column" type="text" value={this.state.planetsearch} placeholder="search planets" onChange={(e) => this.SetCharSearch(e, "planetsearch")}></input>
-                                <button className="button column is-one-fifth search_btn" type="button" onClick={() => this.searchChar("PlanetSearchResult", this.state.planetsearch)}>
+                                <input className="input column" type="text" value={this.state.planetsearch} placeholder="search planets" onChange={(e) => this.setCharSearch(e, "planetsearch")}></input>
+                                <button className="button column is-one-fifth search_btn" type="button" 
+                                onClick={() => this.searchChar("planetSearchResult", this.state.planetsearch)}>
                                     <span className="icon is-small">
                                         <FontAwesomeIcon icon={faSearch} />
                                     </span>
                                 </button>
                             </div>
                             {
-                                this.state.PlanetSearchResult.count > 0 ? this.ShowPlanetSelect("planetUrl") : this.WaitForValues()
+                                this.state.planetSearchResult.count > 0 ? this.showPlanetSelect("planetUrl") : this.waitForValues()
                             }
                         </div>
                     </div>
                 </form>
 
                 <button type="button" className="button is-rounded generate_btn" 
-                onClick={() => this.GenBtnClicked()}>{this.state.UpdateKey > 0 ? "New Plot" : "Generate a Plot"}</button>
+                onClick={() => this.genBtnClicked()}>{this.state.updateKey > 0 ? "New Plot" : "Generate a Plot"}</button>
                 {
-                    this.state.UpdateKey > 0 ? this.GeneratePlot() : console.log()
+                    this.state.updateKey > 0 ? this.generatePlot() : console.log()
                 }
             </div>
         );
